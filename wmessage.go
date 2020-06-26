@@ -79,14 +79,14 @@ func SendMessages(message string, contact string, wac *whatsapp.Conn) error {
 
 	ContextInfo := whatsapp.ContextInfo{
 		QuotedMessage:   &quotedMessage,
-		QuotedMessageID: "554891175643@s.whatsapp.net",
-		Participant:     "554891175643@s.whatsapp.net", //Whot sent the original message
+		QuotedMessageID: wac.Info.Wid, //"554891119492@s.whatsapp.net",
+		Participant:     wac.Info.Wid, //"554891119492@s.whatsapp.net", //Whot sent the original message
 	}
 
 	msg := whatsapp.TextMessage{
 		Info: whatsapp.MessageInfo{
-			RemoteJid: contact, //"5548991119492@s.whatsapp.net", //Erik 554891175643
-			SenderJid: "5548991119492@s.whatsapp.net",
+			RemoteJid: contact,      //"5548991119492@s.whatsapp.net", //Erik 554891175643
+			SenderJid: wac.Info.Wid, // "554891119492@s.whatsapp.net",
 		},
 		ContextInfo: ContextInfo,
 		Text:        message,
@@ -97,6 +97,6 @@ func SendMessages(message string, contact string, wac *whatsapp.Conn) error {
 		return fmt.Errorf("error sending message: %v", err) //		os.Exit(1)
 	}
 
-	fmt.Println("Message Sent -> ID : " + msgID)
+	fmt.Println("Message Sent -> ID : "+msgID+" Num: "+msg.Info.RemoteJid, " dst: "+wac.Info.Wid)
 	return nil
 }

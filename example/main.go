@@ -23,6 +23,8 @@ func main() {
 		return
 	}
 
+	fmt.Println("================================================")
+
 	err = m74wconn.Login(wac)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error logging in: %v\n", err)
