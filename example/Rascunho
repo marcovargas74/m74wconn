@@ -1,0 +1,20 @@
+
+
+Compila para Arg
+env GOOS=linux GOARCH=arm go build -o whatsapp
+
+
+Copia para Remoto
+scp -P 16022 whatsapp dev@172.31.0.180:/tmp
+
+Os Certificados Validos no Fedora Ficam em 
+/etc/ssl/certs/
+/etc/pki/ca-trust/extracted/
+
+E na Unniti Foi incluido na PArtes 
+/etc/ssl/certs
+
+
+#Para funcionar na Unnitit Tive que copiar os Certificados Validos 
+scp -P 16022 /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt dev@172.31.0.180:/tmp
+scp -P 16022 /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem dev@172.31.0.180:/tmp

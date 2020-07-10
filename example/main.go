@@ -17,13 +17,13 @@ Test
 */
 func main() {
 	//create new WhatsApp connection
-	wac, err := whatsapp.NewConn(60 * time.Second)
+	wac, err := whatsapp.NewConn(30 * time.Second)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error creating connection: %v\n", err)
 		return
 	}
 
-	fmt.Println("================================================")
+	fmt.Println("================Starting================================")
 
 	err = m74wconn.Login(wac)
 	if err != nil {
@@ -33,15 +33,16 @@ func main() {
 
 	<-time.After(3 * time.Second)
 
-	//Cria a mensagem de teste para enviar
-	msg := "Eu sou o BOT"
-	numContact := "5548991119492@s.whatsapp.net"
+	/*
+		//Cria a mensagem de teste para enviar
+		msg := "Eu sou o BOT"
+		numContact := "554891119492@s.whatsapp.net"
 
-	//ERIK
-	//numContact := "554891175643@s.whatsapp.net"
-	if err := m74wconn.SendMessages(msg, numContact, wac); err != nil {
-		log.Fatalf("error send message: %v", err)
-	}
+		//ERIK
+		//numContact := "554891175643@s.whatsapp.net"
+		if err := m74wconn.SendMessages(msg, numContact, wac); err != nil {
+			log.Fatalf("error send message: %v", err)
+		}*/
 
 	//ReceiveMessages(wac)
 	if err := m74wconn.ReceiveMessages(wac); err != nil {
