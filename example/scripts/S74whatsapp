@@ -1,0 +1,56 @@
+#!/bin/sh
+
+unset CONF_FILE
+. /usr/libsh/boot_script_header.sh
+
+
+APP_NAME=whatsapp
+
+start(){
+	send_log info "Starting $APP_NAME"
+        echo `pwd` 
+      #  cd /data/whatsapp
+        cd /usr/bin
+	#if [ x`cat /proc/fpga  | grep Hard | awk '{print $2}'` == xGW280 ]; then
+    	#send_log info "GW280 NOT USE hardkey"
+	#	exit
+	#fi
+	
+        
+	#ipm -r 15 -c $APP_NAME  
+	#ipm -r 15 -c whatsapp   
+	whatsapp &  
+	#./$APP_NAME 
+        cd . 
+}
+
+stop(){
+	kill -9 `ps aux | grep ipm | grep $APP_NAME | awk '{print $1}'`
+	send_log info "Stoping $APP_NAME"
+	for pid in `pidof $APP_NAME`; do
+		kill -15 $pid
+	done
+}
+
+restart (){
+	stop
+	sleep 1
+	start
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+	reload)
+		;;
+	*)
+		send_log err "usage: $0 {start|stop|restart}"
+		;;
+esac

@@ -2,10 +2,10 @@
 #Script usado para Compila aplicação para ARM
 #
 #
-APP_NAME=whatsApp
+APP_NAME=whatsapp
 DIR_WORK_APP=~/projetos-go/src/github.com//marcovargas74/m74wconn/example
 #DIR_FIRMWARE=~/UNNITI_GIT/firmware/packetsAPP_bin/release_voip
-IP_UNNITI=172.31.0.180
+IP_UNNITI=172.31.11.182
 
 
 echo "--------------------------INICIO------------------------------------"

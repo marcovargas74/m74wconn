@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"os/signal"
 	"strings"
 	"syscall"
@@ -11,13 +12,23 @@ import (
 
 	"github.com/Rhymen/go-whatsapp"
 	"github.com/Rhymen/go-whatsapp/binary/proto"
-	tw "github.com/marcovargas74/m74twitter"
+	//tw "github.com/marcovargas74/m74twitter"
 )
 
 //------------------RECEIVE Messages-------------------------------
 type waHandler struct {
 	c         *whatsapp.Conn
 	startTime uint64
+}
+
+//ExecLinuxCmd Roda um comando em Linux
+func ExecLinuxCmd(cmd string, file string) []byte {
+	out, err := exec.Command(cmd, file).Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	//fmt.Printf("return: %s\n", out)
+	return out
 }
 
 //HandleError needs to be implemented to be a valid WhatsApp handler
@@ -41,43 +52,86 @@ func (h *waHandler) HandleError(err error) {
 func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 	//fmt.Printf("%v %v %v %v\n\t%v\n", message.Info.Timestamp, message.Info.Id, message.Info.RemoteJid, message.ContextInfo.QuotedMessageID, message.Text)
 	if message.Info.FromMe || message.Info.Timestamp < h.startTime {
+
+		//Verifica se está rodando
+		if strings.Contains(strings.ToLower(message.Text), "bot run") {
+			fmt.Printf("recebeu de %v \n", message.Info.RemoteJid)
+			msg := "BOT rodando!OK" //
+			SendMessages(msg, message.Info.RemoteJid, h.c)
+			//msg := "Eu sou o BOT" //		numContact := "554891119492@s.whatsapp.net"
+			//fmt.Printf("recebeu de Unniti %v \n", message.Info.RemoteJid)
+			//m74wconn.SendMessages(msg, numContact, wac)
+			return
+		}
+
+		//Atualiza Bot
+		if strings.Contains(strings.ToLower(message.Text), "bot update") {
+			fmt.Printf("recebeu de %v \n", message.Info.RemoteJid)
+			msg := "BOT sera atualizado!OK" //
+			SendMessages(msg, message.Info.RemoteJid, h.c)
+			ExecLinuxCmd("sh", "/data/whatsapp/updateW.sh")
+			//msg := "Eu sou o BOT" //		numContact := "554891119492@s.whatsapp.net"
+			//fmt.Printf("recebeu de Unniti %v \n", message.Info.RemoteJid)
+			//m74wconn.SendMessages(msg, numContact, wac)
+		}
 		return
+
 	}
+
 	fmt.Printf("%v %v\n\t%v\n", message.Info.RemoteJid, message.ContextInfo.QuotedMessageID, message.Text)
 
 	//Token Grupo Comunicação 554899496824-1386712719@g.us
-	if strings.Contains(strings.ToLower(message.Text), "unniti") &&
-		strings.Contains(message.Info.RemoteJid, "554899496824-1386712719") {
-		//Token Grupo Comunicação 554899496824-1386712719@g.us
-		fmt.Printf("recebeu do #Grupo Comunicacao %v \n", message.Info.RemoteJid)
-		msg := "Alguém falou de MIM? Eu sou o BOT Unniti" //
-		SendMessages(msg, message.Info.RemoteJid, h.c)
-		//msg := "Eu sou o BOT" //		numContact := "554891119492@s.whatsapp.net"
-		//fmt.Printf("recebeu de Unniti %v \n", message.Info.RemoteJid)
-		//m74wconn.SendMessages(msg, numContact, wac)
+	if strings.Contains(message.Info.RemoteJid, "554899496824-1386712719") {
+
+		if strings.Contains(strings.ToLower(message.Text), "unniti") {
+			//Token Grupo Comunicação 554899496824-1386712719@g.us
+			fmt.Printf("recebeu do #Grupo Comunicacao %v \n", message.Info.RemoteJid)
+			msg := "Alguém falou de MIM? Eu sou o BOT Unniti" //
+			SendMessagesEmoji(msg, message.Info.RemoteJid, h.c)
+			//fmt.Printf("recebeu de Unniti %v \n", message.Info.RemoteJid)
+			//m74wconn.SendMessages(msg, numContact, wac)
+			return
+		}
+
+		if strings.Contains(strings.ToLower(message.Text), "felicidades") {
+			msg := "Parabéns!!! Muitas Felicidades !!! Muita Saúde, SUCESSO!!" //
+			SendMessages(msg, message.Info.RemoteJid, h.c)
+			return
+		}
+
+		if strings.Contains(strings.ToLower(message.Text), "bom dia") {
+			msg := "Bom Dia!" //
+			SendMessages(msg, message.Info.RemoteJid, h.c)
+		}
+
+		return
 	}
 
-	//Token Grupo Pista 554884923044-1486039747@g.us
+	/*//Token Grupo Pista 554884923044-1486039747@g.us
 	if strings.Contains(message.Text, "#pista_limpa") &&
 		strings.Contains(message.Info.RemoteJid, "554884923044-1486039747") {
 		//msg := "Eu sou o BOT" //
-		numContact := "554891119492@s.whatsapp.net"
+		//numContact := "554891119492@s.whatsapp.net"
 		fmt.Printf("recebeu do #pista_limpa %v \n", message.Info.RemoteJid)
-		SendMessages(message.Text, numContact, h.c)
-		sendTwitter(message.Text)
+		//SendMessages(message.Text, numContact, h.c)
+		//sendTwitter(message.Text)
 
-	}
+	}*/
 
 	//Token
-	if strings.Contains(strings.ToLower(message.Text), "pão de batata") { /*&&
-		strings.Contains(message.Info.RemoteJid, "554899496824-1386712719") {*/
-		//Token Grupo Comunicação 554899496824-1386712719@g.us
+	if strings.Contains(strings.ToLower(message.Text), "pão de batata") {
 		fmt.Printf("recebeu de %v \n", message.Info.RemoteJid)
-		msg := "Alguém falou em Pão de Batata? Eu sou o BOT Unniti" //
-		SendMessages(msg, message.Info.RemoteJid, h.c)
+		msg := "Alguém falou em Pão de Batata? Eu sou um BOT " //
+		SendMessagesEmoji(msg, message.Info.RemoteJid, h.c)
 		//msg := "Eu sou o BOT" //		numContact := "554891119492@s.whatsapp.net"
 		//fmt.Printf("recebeu de Unniti %v \n", message.Info.RemoteJid)
 		//m74wconn.SendMessages(msg, numContact, wac)
+		return
+	}
+
+	if strings.Contains(strings.ToLower(message.Text), "bom dia") {
+		msg := "Bom Dia!" //
+		SendMessages(msg, message.Info.RemoteJid, h.c)
 	}
 
 }
@@ -115,6 +169,37 @@ func ReceiveMessages(wac *whatsapp.Conn) error {
 
 //SendMessages Send Messages using whatsApp Account
 func SendMessages(message string, contact string, wac *whatsapp.Conn) error {
+	previousMessage := ""
+	quotedMessage := proto.Message{
+		Conversation: &previousMessage,
+	}
+
+	ContextInfo := whatsapp.ContextInfo{
+		QuotedMessage:   &quotedMessage,
+		QuotedMessageID: wac.Info.Wid, //"554891119492@s.whatsapp.net",
+		Participant:     wac.Info.Wid, //"554891119492@s.whatsapp.net", //Whot sent the original message
+	}
+
+	msg := whatsapp.TextMessage{
+		Info: whatsapp.MessageInfo{
+			RemoteJid: contact,      //"5548991119492@s.whatsapp.net", //Erik 554891175643
+			SenderJid: wac.Info.Wid, // "554891119492@s.whatsapp.net",
+		},
+		ContextInfo: ContextInfo,
+		Text:        message,
+	}
+
+	msgID, err := wac.Send(msg)
+	if err != nil {
+		return fmt.Errorf("error sending message: %v", err) //		os.Exit(1)
+	}
+
+	fmt.Println("Message Sent -> ID : "+msgID+" Num: "+msg.Info.RemoteJid, " dst: "+wac.Info.Wid)
+	return nil
+}
+
+//SendMessagesEmoji Send Messages using whatsApp Account
+func SendMessagesEmoji(message string, contact string, wac *whatsapp.Conn) error {
 	previousMessage := "😜"
 	quotedMessage := proto.Message{
 		Conversation: &previousMessage,
@@ -145,7 +230,7 @@ func SendMessages(message string, contact string, wac *whatsapp.Conn) error {
 }
 
 /* TWITEER
- */
+ * /
 func sendTwitter(messageFromWhats string) {
 	fmt.Println("Go-Twitter Bot v0.01")
 	/*creds := Credentials{
@@ -166,7 +251,7 @@ func sendTwitter(messageFromWhats string) {
 	if err != nil {
 		log.Println("Error getting Twitter Client")
 		log.Println(err)
-	}*/
+	}* /
 
 	// Print out the pointer to our client
 	// for now so it doesn't throw errors
@@ -182,3 +267,4 @@ func sendTwitter(messageFromWhats string) {
 	tw.SendTwitter(client, messageFromWhats)
 
 }
+*/

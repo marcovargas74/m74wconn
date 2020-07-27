@@ -5,7 +5,7 @@ env GOOS=linux GOARCH=arm go build -o whatsapp
 
 
 Copia para Remoto
-scp -P 16022 whatsapp dev@172.31.0.180:/tmp
+scp -P 16022 whatsapp dev@172.31.11.182:/tmp
 
 Os Certificados Validos no Fedora Ficam em 
 /etc/ssl/certs/
