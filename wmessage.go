@@ -15,6 +15,15 @@ import (
 	//tw "github.com/marcovargas74/m74twitter"
 )
 
+//Twconn Type wconn Variaveis Globais usados em todo o wconn
+type Twconn struct {
+	LogProgEnable   bool
+	VersionSoftware string //Versao da aplicação Default
+}
+
+//WconnCtrl Type wconn Variaveis Globais usados em todo o wconn
+var WconnCtrl Twconn
+
 //------------------RECEIVE Messages-------------------------------
 type waHandler struct {
 	c         *whatsapp.Conn
@@ -56,7 +65,7 @@ func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		//Verifica se está rodando
 		if strings.Contains(strings.ToLower(message.Text), "bot run") {
 			fmt.Printf("recebeu de %v \n", message.Info.RemoteJid)
-			msg := "BOT rodando!OK" //
+			msg := fmt.Sprintf("BOT rodando!OK version %s", WconnCtrl.VersionSoftware)
 			SendMessages(msg, message.Info.RemoteJid, h.c)
 			//msg := "Eu sou o BOT" //		numContact := "554891119492@s.whatsapp.net"
 			//fmt.Printf("recebeu de Unniti %v \n", message.Info.RemoteJid)
@@ -80,6 +89,18 @@ func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 
 	fmt.Printf("%v %v\n\t%v\n", message.Info.RemoteJid, message.ContextInfo.QuotedMessageID, message.Text)
 
+	//Discart Message From Token Grupo Pista 554884923044-1486039747@g.us
+	if strings.Contains(message.Info.RemoteJid, "-1397069327") || //Pista_limpa 1
+		strings.Contains(message.Info.RemoteJid, "-1486039747") || //Pista_limpa 3
+		strings.Contains(message.Info.RemoteJid, "-1473907385") { //Pista_limpa Estadual
+		fmt.Printf("recebeu do #pista_limpa %v \n", message.Info.RemoteJid)
+		//SendMessages(message.Text, numContact, h.c)
+		/*if strings.Contains(message.Text, "#pista_limpa") {
+		      //sendTwitter(message.Text)
+				}*/
+
+		return
+	}
 	//Token Grupo Comunicação 554899496824-1386712719@g.us
 	if strings.Contains(message.Info.RemoteJid, "554899496824-1386712719") {
 
@@ -107,7 +128,7 @@ func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		return
 	}
 
-	/*//Token Grupo Pista 554884923044-1486039747@g.us
+	/* /Token Grupo Pista 554884923044-1486039747@g.us
 	if strings.Contains(message.Text, "#pista_limpa") &&
 		strings.Contains(message.Info.RemoteJid, "554884923044-1486039747") {
 		//msg := "Eu sou o BOT" //
@@ -115,7 +136,7 @@ func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		fmt.Printf("recebeu do #pista_limpa %v \n", message.Info.RemoteJid)
 		//SendMessages(message.Text, numContact, h.c)
 		//sendTwitter(message.Text)
-
+		return
 	}*/
 
 	//Token

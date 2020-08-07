@@ -12,10 +12,32 @@ import (
 
 //------------------CONNECT-------------------------------
 
+func init() {
+	m74wconn.WconnCtrl.VersionSoftware = "20.08.07"
+	/*var err error
+	dt := time.Now()
+	TesterCtrl.VersionSoftware = dt.Format("2006-01-02")
+	//Configuracao do LOG
+	TesterCtrl.LOOPMain = true
+	TesterCtrl.LogProgEnable = true
+	TesterCtrl.LogProgPrintLocal = true
+	TesterCtrl.LogProgLevel = rlog.Debug | rlog.Local4
+	TesterCtrl.LogProgIP = "172.31.11.162:514"
+
+	appl.WorkDir, err = os.Getwd()
+	appl.CheckErr(err)
+
+	rlog.Clear()
+	rlog.StartLogger(TesterCtrl.LogProgEnable, TesterCtrl.LogProgLevel, TesterCtrl.LogProgIP)
+	rlog.SetPrintLocal(TesterCtrl.LogProgPrintLocal)
+	rlog.AppSyslog(syslog.LOG_INFO, "%s ======== Start Mannager App Version %s\n", rlog.ThisFunction(), TesterCtrl.VersionSoftware)
+	*/
+}
+
 /*
-Test
-*/
+ */
 func main() {
+	//version := "20.07.28"
 	//create new WhatsApp connection
 	wac, err := whatsapp.NewConn(30 * time.Second)
 	if err != nil {
@@ -23,7 +45,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("================Starting================================")
+	fmt.Println("================Starting================================", m74wconn.WconnCtrl.VersionSoftware)
 
 	err = m74wconn.Login(wac)
 	if err != nil {
