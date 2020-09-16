@@ -120,10 +120,10 @@ func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 			return
 		}
 
-		if strings.Contains(strings.ToLower(message.Text), "bom dia") {
+		/*if strings.Contains(strings.ToLower(message.Text), "bom dia") {
 			msg := "Bom Dia!" //
 			SendMessages(msg, message.Info.RemoteJid, h.c)
-		}
+		}*/
 
 		return
 	}
