@@ -13,7 +13,7 @@ import (
 //------------------CONNECT-------------------------------
 
 func init() {
-	m74wconn.WconnCtrl.VersionSoftware = "20.08.07"
+	m74wconn.WconnCtrl.VersionSoftware = "20.09.24"
 	/*var err error
 	dt := time.Now()
 	TesterCtrl.VersionSoftware = dt.Format("2006-01-02")

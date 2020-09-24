@@ -57,10 +57,18 @@ func (h *waHandler) HandleError(err error) {
 	}
 }
 
+//var StartTime = uint64(time.Now().Unix()) // once you start the API we save the start time
 //Optional to be implemented. Implement HandleXXXMessage for the types you need.
 func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 	//fmt.Printf("%v %v %v %v\n\t%v\n", message.Info.Timestamp, message.Info.Id, message.Info.RemoteJid, message.ContextInfo.QuotedMessageID, message.Text)
-	if message.Info.FromMe || message.Info.Timestamp < h.startTime {
+	//Discart old messages
+	if message.Info.Timestamp < h.startTime {
+		return
+	}
+
+	time.Sleep(500 * time.Millisecond)
+
+	if message.Info.FromMe {
 
 		//Verifica se está rodando
 		if strings.Contains(strings.ToLower(message.Text), "bot run") {
@@ -101,6 +109,7 @@ func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 
 		return
 	}
+
 	//Token Grupo Comunicação 554899496824-1386712719@g.us
 	if strings.Contains(message.Info.RemoteJid, "554899496824-1386712719") {
 
@@ -119,11 +128,23 @@ func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 			SendMessages(msg, message.Info.RemoteJid, h.c)
 			return
 		}
+		/*
+			if strings.Contains(strings.ToLower(message.Text), "bom dia") {
+				msg := "Bom Dia!" //
+				SendMessages(msg, message.Info.RemoteJid, h.c)
+			}*/
 
-		/*if strings.Contains(strings.ToLower(message.Text), "bom dia") {
-			msg := "Bom Dia!" //
+		if strings.Contains(strings.ToLower(message.Text), "boa tarde") {
+			msg := "Boa Tarde!" //
 			SendMessages(msg, message.Info.RemoteJid, h.c)
-		}*/
+			return
+		}
+
+		if strings.Contains(strings.ToLower(message.Text), "boa noite") {
+			msg := "Boa Noite!" //
+			SendMessages(msg, message.Info.RemoteJid, h.c)
+
+		}
 
 		return
 	}
@@ -150,10 +171,11 @@ func (h *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		return
 	}
 
-	if strings.Contains(strings.ToLower(message.Text), "bom dia") {
-		msg := "Bom Dia!" //
-		SendMessages(msg, message.Info.RemoteJid, h.c)
-	}
+	/*
+		if strings.Contains(strings.ToLower(message.Text), "bom dia") {
+			msg := "Bom Dia!" //
+			SendMessages(msg, message.Info.RemoteJid, h.c)
+		}*/
 
 }
 
